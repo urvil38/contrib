@@ -34,29 +34,31 @@ sudo ./opa-iptables -h
 
 Usage of ./opa-iptables:
   -controller-host string
-    	controller host (default "0.0.0.0")
+        controller host (default "0.0.0.0")
   -controller-port string
-    	controller port on which it listen on (default "33455")
+        controller port on which it listen on (default "33455")
   -log-format string
-    	set log format. i.e. text | json | json-pretty (default "text")
+        set log format. i.e. text | json | json-pretty (default "text")
   -log-level string
-    	set log level. i.e. info | debug | error (default "info")
+        set log level. i.e. info | debug | error (default "info")
+  -opa-auth-token string
+        opa bearer token for authentication
   -opa-endpoint string
-    	endpoint of opa in form of http://ip:port i.e. http://192.33.0.1:8181 (default "http://127.0.0.1:8181")
-  -v	show version
+        endpoint of opa in form of http://ip:port i.e. http://192.33.0.1:8181 (default "http://127.0.0.1:8181")
+  -v    show version
   -watch-interval duration
-    	time interval for watcher to check for any update in watcherState (default 1m0s)
+        time interval for watcher to check for any update in watcherState (default 1m0s)
   -watcher
-    	use experimental watcher
+        use experimental watcher
   -worker int
-    	number of workers needed for watcher (default 3)
+        number of workers needed for watcher (default 4)
 
 ```
 
 **Run As Docker Container:**
 
 ```
-docker run --rm --net host --cap-add=NET_ADMIN urvil38/opa-iptables:0.0.2-dev -log-level debug -opa-endpoint http://127.0.0.1:8181
+docker run --rm --net host --cap-add=NET_ADMIN urvil38/opa-iptables:0.0.3-dev -log-level debug -opa-endpoint http://127.0.0.1:8181
 ```
 
 ## API

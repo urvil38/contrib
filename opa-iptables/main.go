@@ -16,6 +16,7 @@ import (
 
 func main() {
 	opaEndpoint := flag.String("opa-endpoint", "http://127.0.0.1:8181", "endpoint of opa in form of http://ip:port i.e. http://192.33.0.1:8181")
+	opaAuthToken := flag.String("opa-auth-token", "", "opa bearer token for authentication")
 	controllerAddr := flag.String("controller-host", "0.0.0.0", "controller host")
 	// setting default port value to some high port to prevent accidentally block this port in IPTable rules
 	controllerPort := flag.String("controller-port", "33455", "controller port on which it listen on")
@@ -23,7 +24,7 @@ func main() {
 	logLevel := flag.String("log-level", "info", "set log level. i.e. info | debug | error")
 	watcherInterval := flag.Duration("watch-interval", 1*time.Minute, "time interval for watcher to check for any update in watcherState")
 	v := flag.Bool("v", false, "show version")
-	workerCount := flag.Int("worker", 3, "number of workers needed for watcher")
+	workerCount := flag.Int("worker", runtime.NumCPU(), "number of workers needed for watcher")
 	watcherFlag := flag.Bool("watcher", false, "use experimental watcher")
 
 	flag.Parse()
@@ -58,6 +59,7 @@ func main() {
 
 	controllerConfig := controller.Config{
 		OpaEndpoint:     *opaEndpoint,
+		OpaAuthToken:    *opaAuthToken,
 		ControllerAddr:  *controllerAddr,
 		ControllerPort:  *controllerPort,
 		WatcherInterval: *watcherInterval,

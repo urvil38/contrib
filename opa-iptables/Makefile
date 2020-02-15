@@ -1,7 +1,7 @@
-VERSION := 0.0.1-dev
+VERSION := 0.0.3-dev
 GO := go
 GOOS := linux
-DOCKER_TAG := 0.0.2-dev
+DOCKER_TAG := 0.0.3-dev
 
 BIN := opa-iptables
 PKG := github.com/open-policy-agent/contrib/opa-iptables
@@ -29,7 +29,7 @@ docker-build:
 	@docker run -it --rm -v $$(pwd):/go/src/$(PKG) \
 		-e GOOS=$(GOOS) \
 		-e GO111MODULE=$(GO111MODULE) \
-		-w /go/src/$(PKG) golang:1.13-rc-alpine  \
+		-w /go/src/$(PKG) golang:1.13-alpine  \
 		$(GO) build -o $(BIN) -ldflags $(LDFLAGS)
 
 	@docker build -t urvil38/opa-iptables:$(DOCKER_TAG) \

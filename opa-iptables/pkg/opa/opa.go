@@ -35,21 +35,21 @@ type Query interface {
 
 type Data interface {
 	PutData(path string, data []byte) error
-	GetData(path string) ([]byte,error)
+	GetData(path string) ([]byte, error)
 	DeleteData(path string) error
 }
 
 type opaClient struct {
-	opaEndpoint    string
-	authentication string
-	client         *http.Client
+	opaEndpoint string
+	authToken   string
+	client      *http.Client
 }
 
-func New(opaEndpoint string, auth string) Client {
+func New(opaEndpoint string, authToken string) Client {
 	client := &http.Client{
 		Timeout: 10 * time.Second,
 	}
-	return &opaClient{opaEndpoint, auth, client}
+	return &opaClient{opaEndpoint, authToken, client}
 }
 
 func (c *opaClient) DoQuery(path string, input interface{}) (data []byte, err error) {
@@ -67,18 +67,18 @@ func (c *opaClient) DoQuery(path string, input interface{}) (data []byte, err er
 
 func (c *opaClient) PutData(path string, data []byte) error {
 	url := c.opaEndpoint + fmt.Sprintf(documentEndpointFmt, path)
-	_,err := c.do(http.MethodPut, url, data)
+	_, err := c.do(http.MethodPut, url, data)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *opaClient) GetData(path string) ([]byte,error) {
+func (c *opaClient) GetData(path string) ([]byte, error) {
 	url := c.opaEndpoint + fmt.Sprintf(documentEndpointFmt, path)
-	res,err := c.do(http.MethodGet, url, nil)
+	res, err := c.do(http.MethodGet, url, nil)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	return res, nil
 }
@@ -98,8 +98,8 @@ func (c *opaClient) do(method, url string, data []byte) ([]byte, error) {
 		return nil, err
 	}
 	req.Header.Add("Content-Type", "application/json")
-	if c.authentication != "" {
-		req.Header.Add("Authorization", "Bearer "+c.authentication)
+	if c.authToken != "" {
+		req.Header.Add("Authorization", "Bearer "+c.authToken)
 	}
 	res, err := c.client.Do(req)
 	if err != nil {

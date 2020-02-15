@@ -45,7 +45,7 @@ services:
       - PORT=9090
   opa-iptables:
     container_name: opa-iptables
-    image: urvil38/opa-iptables:0.0.2-dev
+    image: urvil38/opa-iptables:0.0.3-dev
     cap_add:
       - NET_ADMIN
     network_mode: host

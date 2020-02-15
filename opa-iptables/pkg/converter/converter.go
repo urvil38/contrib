@@ -26,7 +26,7 @@ func marshal(tf flag.IPTableflagSet) ([]byte, error) {
 		SourceRange:        tf.SrcRangeFlag,
 		Jump:               tf.JumpFlag,
 		ToPorts:            tf.ToPortFlag,
-		LogPrefix:			tf.LogPrefixFlag,
+		LogPrefix:          tf.LogPrefixFlag,
 		Match:              strings.Split(tf.MatchFlag, ","),
 		Ctstate:            strings.Split(tf.CTStateFlag, ","),
 		TCPFlags:           iptables.TcpFlags(tf.TCPFlag),
@@ -44,8 +44,8 @@ func IPTableToJSON(reader io.Reader) ([]string, error) {
 		return nil, err
 	}
 
-	if len(b) < 8 {
-		return []string{""},nil
+	if len(b) < len("iptables") {
+		return []string{""}, nil
 	}
 
 	rules := strings.Split(string(b), "\n")

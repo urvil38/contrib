@@ -11,6 +11,7 @@ import (
 
 type Config struct {
 	OpaEndpoint     string
+	OpaAuthToken    string
 	ControllerAddr  string
 	ControllerPort  string
 	WatcherInterval time.Duration
