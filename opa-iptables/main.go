@@ -68,9 +68,11 @@ func main() {
 	}
 
 	logger.WithFields(logrus.Fields{
-		"OPA Endpoint": controllerConfig.OpaEndpoint,
-		"Log Format":   logConfig.Format,
-		"Log Level":    logConfig.Level,
+		"OPA Endpoint":       controllerConfig.OpaEndpoint,
+		"Log Format":         logConfig.Format,
+		"Log Level":          logConfig.Level,
+		"Controller Adderss": controllerConfig.ControllerAddr,
+		"Controller Port":    controllerConfig.ControllerPort,
 	}).Info("Started Controller with following configuration:")
 
 	c := controller.New(controllerConfig)
