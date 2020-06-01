@@ -10,9 +10,9 @@ import (
 
 	"github.com/gorilla/mux"
 
+	cmd "github.com/open-policy-agent/contrib/opa-iptables/pkg/command"
 	"github.com/open-policy-agent/contrib/opa-iptables/pkg/converter"
 	"github.com/open-policy-agent/contrib/opa-iptables/pkg/iptables"
-	cmd "github.com/open-policy-agent/contrib/opa-iptables/pkg/command"
 )
 
 func (c *Controller) jsonRuleHandler() http.HandlerFunc {
@@ -74,7 +74,7 @@ func (c *Controller) insertRuleHandler() http.HandlerFunc {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		
+
 		var insertError error
 		if len(ruleSets) > 0 {
 			for _, ruleSet := range ruleSets {
@@ -122,11 +122,11 @@ func (c *Controller) insertRuleHandler() http.HandlerFunc {
 					return
 				}
 
-				err := c.putNewRulesToOPA(s.id,rs.Rules)
+				err := c.putNewRulesToOPA(s.id, rs.Rules)
 				if err != nil {
 					return
 				}
-				
+
 				c.w.addState(&s)
 			}
 		}
@@ -178,7 +178,7 @@ func (c *Controller) deleteRuleHandler() http.HandlerFunc {
 					c.logger.Error(err)
 					return
 				}
-	
+
 				err = c.deleteOldRulesFromOPA(s.id)
 				if err != nil {
 					c.logger.Error(err)
@@ -221,7 +221,7 @@ func (c *Controller) listRulesHandler() http.HandlerFunc {
 func (c *Controller) listAllRulesHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		c.logger.Infof("msg=\"Received Request\" req_method=%v req_path=%v\n", r.Method, r.URL)
-		
+
 		verbose := stringToBool(r.FormValue("verbose"))
 		var iptableTableList = [...]string{"filter", "nat"}
 

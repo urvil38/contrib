@@ -256,18 +256,18 @@ func (r Rule) String() string {
 	return strings.Join(spec, " ")
 }
 
-func MarshalRules(rules []Rule) ([]byte,error) {
+func MarshalRules(rules []Rule) ([]byte, error) {
 	return json.Marshal(rules)
 }
 
-func UnmarshalRules(data []byte) ([]Rule,error) {
+func UnmarshalRules(data []byte) ([]Rule, error) {
 	type result struct {
 		Rules []Rule `json:"result"`
 	}
 	var rules result
-	err := json.Unmarshal(data,&rules)
+	err := json.Unmarshal(data, &rules)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	return rules.Rules, nil
 }

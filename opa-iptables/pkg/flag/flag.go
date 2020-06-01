@@ -189,7 +189,7 @@ func (fs *FlagSet) parseOne() (bool, error) {
 	s := fs.args[0]
 
 	if len(s) < 2 || s[0] != '-' {
-		return false, fmt.Errorf("%v is not a flag, flag must starts with '-' or '--' and length must be greater than one",s)
+		return false, fmt.Errorf("%v is not a flag, flag must starts with '-' or '--' and length must be greater than one", s)
 	}
 
 	numMinus := 1
@@ -217,7 +217,7 @@ func (fs *FlagSet) parseOne() (bool, error) {
 	hasArgs := false
 	actualValue := ""
 	numArg := flag.numArgs
-	if len(fs.args)-flag.numArgs >= 0 {
+	if len(fs.args)-numArg >= 0 {
 		value, fs.args = fs.args[:numArg], fs.args[numArg:]
 		for _, v := range value {
 			if len(v) > 0 && v[0] == '-' {

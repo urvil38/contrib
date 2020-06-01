@@ -13,19 +13,19 @@ import (
 	"github.com/open-policy-agent/contrib/opa-iptables/pkg/opa"
 )
 
-func New(config Config) *Controller {
+func New(c Config) *Controller {
 	return &Controller{
-		logger:     logging.GetLogger(),
-		listenAddr: config.ControllerAddr + ":" + config.ControllerPort,
-		opaClient:  opa.New(config.OpaEndpoint, config.OpaAuthToken),
+		logger:     logging.Get(),
+		listenAddr: c.ControllerAddr + ":" + c.ControllerPort,
+		opaClient:  opa.New(c.OpaEndpoint, c.OpaAuthToken),
 		w: &watcher{
-			watcherInterval: config.WatcherInterval,
+			watcherInterval: c.WatcherInterval,
 			watcherState:    make(map[string]*state),
 			watcherDoneCh:   make(chan struct{}, 1),
-			logger:          logging.GetLogger(),
+			logger:          logging.Get(),
 		},
-		watcherWorkerCount: config.WorkerCount,
-		watcher:        config.WatcherFlag,
+		watcherWorkerCount: c.WorkerCount,
+		watcher:            c.WatcherFlag,
 	}
 }
 
@@ -36,11 +36,12 @@ func (c *Controller) Run() {
 	signal.Notify(signalCh, os.Interrupt, syscall.SIGTERM)
 
 	r := mux.NewRouter()
-	r.HandleFunc("/v1/iptables/insert", c.insertRuleHandler()).Methods("POST").Queries("q", "")
-	r.HandleFunc("/v1/iptables/delete", c.deleteRuleHandler()).Methods("POST").Queries("q", "")
-	r.HandleFunc("/v1/iptables/json", c.jsonRuleHandler()).Methods("POST")
-	r.HandleFunc("/v1/iptables/list/{table}/{chain}", c.listRulesHandler()).Methods("GET")
-	r.HandleFunc("/v1/iptables/list/all", c.listAllRulesHandler()).Methods("GET")
+	s := r.PathPrefix("/v1/iptables").Subrouter()
+	s.HandleFunc("/insert", c.insertRuleHandler()).Methods("POST").Queries("q", "")
+	s.HandleFunc("/delete", c.deleteRuleHandler()).Methods("POST").Queries("q", "")
+	s.HandleFunc("/json", c.jsonRuleHandler()).Methods("POST")
+	s.HandleFunc("/list/{table}/{chain}", c.listRulesHandler()).Methods("GET")
+	s.HandleFunc("/list/all", c.listAllRulesHandler()).Methods("GET")
 
 	c.server = http.Server{
 		Addr:         c.listenAddr,

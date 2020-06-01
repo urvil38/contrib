@@ -48,8 +48,8 @@ func TestIPTableToJSON(t *testing.T) {
 		t.Error(err)
 	}
 	for i, rule := range rules {
-        if rule != expected[i] {
-            t.Errorf("wanted: %v, but got: %v",expected[i],rule)
-        } 
-    }
+		if rule != expected[i] {
+			t.Errorf("wanted: %v, but got: %v", expected[i], rule)
+		}
+	}
 }

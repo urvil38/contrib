@@ -38,9 +38,9 @@ func main() {
 		Format: *logFormat,
 		Level:  *logLevel,
 	}
-	logging.SetupLogging(logConfig)
+	logging.Set(logConfig)
 
-	logger := logging.GetLogger()
+	logger := logging.Get()
 
 	if runtime.GOOS != "linux" {
 		logger.Errorln("\"iptables\" utility is only supported on Linux kernel. It's seems like that you are not running Linux kernel.")

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"log"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 )
@@ -21,14 +21,14 @@ func main() {
 	if port == "" {
 		port = "9090"
 	}
-	fmt.Println("Server is running on port:",port)
-	http.HandleFunc("/",rootHandler)
-	err := http.ListenAndServe(":"+port,nil)
+	fmt.Println("Server is running on port:", port)
+	http.HandleFunc("/", rootHandler)
+	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w,"%s\n%s","Server is running on port: "+port,"Hello world!!")
+	fmt.Fprintf(w, "%s\n%s", "Server is running on port: "+port, "Hello world!!")
 }

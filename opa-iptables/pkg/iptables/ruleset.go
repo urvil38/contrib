@@ -1,8 +1,8 @@
 package iptables
 
 import (
-	"reflect"
 	"encoding/json"
+	"reflect"
 )
 
 type RuleSet struct {
@@ -18,7 +18,7 @@ type OpaResponse struct {
 
 func (or OpaResponse) isEmpty() bool {
 	for _, ruleSet := range or.RuleSets {
-		if !reflect.DeepEqual(ruleSet,RuleSet{}) {
+		if !reflect.DeepEqual(ruleSet, RuleSet{}) {
 			return false
 		}
 	}
@@ -32,7 +32,7 @@ func UnmarshalRuleset(opaQueryRes []byte) ([]RuleSet, error) {
 		return nil, err
 	}
 	if or.isEmpty() {
-		return []RuleSet{},nil
+		return []RuleSet{}, nil
 	}
 	return or.RuleSets, nil
 }

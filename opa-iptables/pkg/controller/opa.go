@@ -15,10 +15,10 @@ func (c *Controller) putNewRulesToOPA(id string, rules []iptables.Rule) error {
 }
 
 func (c *Controller) deleteOldRulesFromOPA(id string) error {
-	return c.opaClient.DeleteData("state/"+id)
+	return c.opaClient.DeleteData("state/" + id)
 }
 
-func (c *Controller) getCurrentRulesFromOPA(id string) ([]iptables.Rule,error) {
+func (c *Controller) getCurrentRulesFromOPA(id string) ([]iptables.Rule, error) {
 	data, err := c.opaClient.GetData("state/" + id)
 	if err != nil {
 		return nil, err

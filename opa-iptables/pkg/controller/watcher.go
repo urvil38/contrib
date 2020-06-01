@@ -48,7 +48,7 @@ func (w *watcher) watch(workerCh chan<- state) {
 }
 
 func (c *Controller) newWatcher() {
-	
+
 	workerCh := make(chan state)
 	workerDoneCh := make(chan struct{}, c.watcherWorkerCount)
 	c.startWorker(workerCh, workerDoneCh)
@@ -82,13 +82,13 @@ func (c *Controller) stopWatcher(ctx context.Context) error {
 }
 
 func (c *Controller) startWorker(workerCh <-chan state, done chan<- struct{}) {
-	for i := 1 ; i <= c.watcherWorkerCount ; i++ {
+	for i := 1; i <= c.watcherWorkerCount; i++ {
 		go c.worker(i, workerCh, done)
 	}
 }
 
 func (c *Controller) stopWorker(done chan struct{}) {
-	for i := 1 ; i <= c.watcherWorkerCount ; i++ {
+	for i := 1; i <= c.watcherWorkerCount; i++ {
 		<-done
 	}
 	close(done)

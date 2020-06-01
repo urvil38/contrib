@@ -1,13 +1,13 @@
 package controller
 
 import (
-	"github.com/open-policy-agent/contrib/opa-iptables/pkg/logging"
 	"fmt"
 	"github.com/open-policy-agent/contrib/opa-iptables/pkg/iptables"
+	"github.com/open-policy-agent/contrib/opa-iptables/pkg/logging"
 )
 
 func insertRules(rules []iptables.Rule) error {
-	logger := logging.GetLogger()
+	logger := logging.Get()
 	successCount := 0
 	totalRules := len(rules)
 	var gotError bool
@@ -22,8 +22,8 @@ func insertRules(rules []iptables.Rule) error {
 		}
 		successCount++
 	}
-	
-	logger.Infof("Inserted %v out of %v rules (%v/%v)", successCount, totalRules,successCount,totalRules)
+
+	logger.Infof("Inserted %v out of %v rules (%v/%v)", successCount, totalRules, successCount, totalRules)
 	if gotError {
 		return fmt.Errorf("get error during inserting rules")
 	}
@@ -31,7 +31,7 @@ func insertRules(rules []iptables.Rule) error {
 }
 
 func deleteRules(rules []iptables.Rule) error {
-	logger := logging.GetLogger()
+	logger := logging.Get()
 	successCount := 0
 	totalRules := len(rules)
 	var gotError bool
@@ -55,7 +55,7 @@ func deleteRules(rules []iptables.Rule) error {
 }
 
 func testRules(ruleSet iptables.RuleSet) {
-	logger := logging.GetLogger()
+	logger := logging.Get()
 	for i, rule := range ruleSet.Rules {
 		logger.Infof("Rule %v: %v\n", i+1, rule.String())
 	}

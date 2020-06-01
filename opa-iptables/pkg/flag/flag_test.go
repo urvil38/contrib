@@ -37,12 +37,12 @@ func TestParse(t *testing.T) {
 		{
 			"iptables -t -A PREROUTING",
 			IPTableflagSet{},
-			argumentError{flagName:"t",numArg:1},
+			argumentError{flagName: "t", numArg: 1},
 		},
 		{
 			"iptables -notdefined notsure",
 			IPTableflagSet{},
-			flagError{name:"notdefined"},
+			flagError{name: "notdefined"},
 		},
 	}
 
@@ -52,7 +52,7 @@ func TestParse(t *testing.T) {
 		fs.InitFlagSet(&iptFlagset)
 		err := fs.Parse(strings.Split(tt.arguments, " "))
 		if err != tt.err {
-			t.Errorf("wanted: %v, got: %v",tt.err,err)
+			t.Errorf("wanted: %v, got: %v", tt.err, err)
 		}
 		if !reflect.DeepEqual(iptFlagset, tt.flagSet) {
 			t.Errorf("wanted: %#v, but got: %#v", tt.flagSet, iptFlagset)
