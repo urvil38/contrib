@@ -78,7 +78,7 @@ func (c *Controller) shutdownWatcher() {
 
 	err := c.stopWatcher(ctx)
 	if err != nil {
-		c.logger.Error(err)
+		c.logger.Error("Error while closing watcher: ",err)
 	} else {
 		c.logger.Info("watcher shutdown successfully")
 	}
@@ -100,7 +100,7 @@ func (c *Controller) shutdownController() {
 	err := c.server.Shutdown(ctx)
 	if err != nil {
 		if err == context.DeadlineExceeded {
-			c.logger.Info("shutdown timeout")
+			c.logger.Error("Error while closing controller: ",err)
 		} else {
 			c.logger.Infof("Error while shutting down controller: %s", err)
 		}

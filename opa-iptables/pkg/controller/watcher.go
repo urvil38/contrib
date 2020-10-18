@@ -34,35 +34,42 @@ func (w *watcher) getState(key string) (state, error) {
 	return *s, nil
 }
 
-func (w *watcher) watch(workerCh chan<- state) {
+func (w *watcher) watch(workerCh chan<- state, stopCh <-chan struct{}) {
 	w.mu.RLock()
+	defer w.mu.RUnlock()
 	for queryPath := range w.watcherState {
 		s, ok := w.watcherState[queryPath]
 		if !ok {
 			w.logger.Debugf("key %v don't exists in watcherState map", queryPath)
 			continue
 		}
-		workerCh <- *s
+		select {
+		case _, ok = <-stopCh:
+			if !ok {
+				return
+			}
+		default:
+			workerCh <- *s
+		}
 	}
-	w.mu.RUnlock()
 }
 
 func (c *Controller) newWatcher() {
+	c.logger.Info("starting watcher")
 
 	workerCh := make(chan state)
 	workerDoneCh := make(chan struct{}, c.watcherWorkerCount)
+	workerStopCh := make(chan struct{})
 	c.startWorker(workerCh, workerDoneCh)
 
-	c.logger.Info("starting watcher")
 	ticker := time.NewTicker(c.w.watcherInterval)
 	for {
 		select {
 		case <-ticker.C:
-			c.logger.Debug("checking for any update")
-			go c.w.watch(workerCh)
+			c.logger.Info("checking for any update")
+			go c.w.watch(workerCh, workerStopCh)
 		case <-c.w.watcherDoneCh:
-			close(workerCh)
-			c.stopWorker(workerDoneCh)
+			c.stopWorker(workerDoneCh, workerStopCh, workerCh)
 			close(c.w.watcherDoneCh)
 			return
 		}
@@ -87,11 +94,13 @@ func (c *Controller) startWorker(workerCh <-chan state, done chan<- struct{}) {
 	}
 }
 
-func (c *Controller) stopWorker(done chan struct{}) {
+func (c *Controller) stopWorker(doneCh chan struct{}, stopCh chan struct{}, workerCh chan state) {
+	close(stopCh)
+	close(workerCh)
 	for i := 1; i <= c.watcherWorkerCount; i++ {
-		<-done
+		<-doneCh
 	}
-	close(done)
+	close(doneCh)
 }
 
 // worker runs in it's own goroutine.

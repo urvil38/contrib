@@ -25,7 +25,6 @@ func main() {
 	watcherInterval := flag.Duration("watch-interval", 1*time.Minute, "time interval for watcher to check for any update in watcherState")
 	v := flag.Bool("v", false, "show version")
 	workerCount := flag.Int("worker", runtime.NumCPU(), "number of workers needed for watcher")
-	watcherFlag := flag.Bool("watcher", false, "use experimental watcher")
 
 	flag.Parse()
 
@@ -63,7 +62,7 @@ func main() {
 		ControllerAddr:  *controllerAddr,
 		ControllerPort:  *controllerPort,
 		WatcherInterval: *watcherInterval,
-		WatcherFlag:     *watcherFlag,
+		WatcherFlag:     true,
 		WorkerCount:     *workerCount,
 	}
 
